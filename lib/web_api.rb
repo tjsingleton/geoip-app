@@ -7,12 +7,8 @@ class WebAPI
   INVALID         = [400, {"Content-Type" => "application/json"}, [JSON.generate({error: "Invalid formatted IP"})]]
   COPYRIGHT_NOTICE = "This product includes GeoLite data created by MaxMind, available from http://www.maxmind.com"
 
-  def initialize(db_path = DEFAULT_DB_PATH)
-    @db_path = db_path
-  end
-
   def call(env)
-    geoip     = Thread.current[:geoip] ||= GeoIP.new(@db_path)
+    geoip     = GeoIP::DB.instance
     addresses = File.basename(env["PATH_INFO"]).split("+")
 
     responses = addresses.map do |ip|

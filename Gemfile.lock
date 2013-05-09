@@ -4,8 +4,16 @@ GEM
     diff-lcs (1.2.3)
     foreman (0.62.0)
       thor (>= 0.13.6)
-    geoip (1.1.2)
+    foreman (0.62.0-java)
+      posix-spawn (~> 0.3.6)
+      thor (>= 0.13.6)
+    geoip (1.2.1)
+    geoip-db (2013.05)
+      geoip
+    posix-spawn (0.3.6)
     puma (1.6.3)
+      rack (~> 1.2)
+    puma (1.6.3-java)
       rack (~> 1.2)
     rack (1.5.2)
     rack-test (0.6.2)
@@ -26,7 +34,7 @@ PLATFORMS
 
 DEPENDENCIES
   foreman
-  geoip
+  geoip-db
   puma
   rack
   rack-test
