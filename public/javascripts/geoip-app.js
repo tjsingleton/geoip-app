@@ -1,8 +1,17 @@
 (function(){
   var IPGeolocation = Backbone.Model.extend({
     urlRoot: 'http://' + document.location.host + '/api/lookup',
+
     parse: function(response, options){
       return response.geolocation[0];
+    },
+
+    locationStr: function(){
+      return _([
+        this.get('city_name'),
+        this.get('region_name'),
+        this.get('country_code2')
+      ]).reject(function(n){ return _.isEmpty(n); }).join(', ');
     }
   });
 
@@ -10,16 +19,20 @@
     model: IPGeolocation
   });
 
-  var AddressList =  Backbone.View.extend({
-    template: _.template("<% collection.each(function(ip) { %> <li><%= ip.id %></li> <% }); %>"),
-
-    initialize: function(options) {
-      this.listenTo(options.collection, "add", _.bind(this.render, this));
+  var AddressListItem =  Backbone.View.extend({
+    template: _.template('<%= model.id %> (<%= model.locationStr() %>)'),
+    events: {
+      'click': 'showDetail'
     },
 
     render: function(){
-      var src = this.template({collection: this.options.collection});
-      this.$el.html(src);
+      this.$el.html(this.template({model: this.model}));
+
+      return this;
+    },
+
+    showDetail: function(){
+      Backbone.trigger('ip:detail', this.model)
     }
   });
 
@@ -30,7 +43,7 @@
     events: {
       'click .add': 'addIP',
       'click .sample': 'addSamples',
-      'submit': function(){ return false; }
+      'submit': 'addIP'
     },
 
     initialize: function() {
@@ -42,7 +55,10 @@
     addIP: function() {
       var ip = this.input.value;
       this.input.value = "";
+      console.log(ip);
       this._addIP(ip);
+
+      return false;
     },
 
     addSamples: function(){
@@ -51,6 +67,8 @@
       for (; ip = this.SAMPLE_IPS[i]; i++) {
         this._addIP(ip);
       }
+
+      return false;
     },
 
     _addIP: function(ip) {
@@ -69,8 +87,8 @@
     }
   });
 
-  var IPMap = function(mapId) {
-    this.map = new google.maps.Map(document.getElementById(mapId), {
+  var IPMap = function(el) {
+    this.map = new google.maps.Map(el, {
       center: new google.maps.LatLng(33.98, -83.69),
       zoom: 5,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -78,39 +96,85 @@
     });
 
     this.mapBounds = new google.maps.LatLngBounds();
+    this.data = {};
   };
 
-  IPMap.prototype.addIP = function(model){
-    var lat = model.get('latitude'),
-        lng = model.get('longitude'),
-        coord, marker;
+  _.extend(IPMap.prototype, {
+    template: _.template('<div class="info">' +
+                         '<h3><%= model.id %></h3>' +
+                         '<% _.each(model.attributes, function(value, key){ %>' +
+                         '<% if (value === model.id || !value) { return; } %>' +
+                         '<div><strong><%= key %>:</strong> <%= value %>' +
+                         '<% }); %>'+
+                         '</div>'),
 
-    if (lat && lng) {
+    addMarker: function(model){
+      var lat = model.get('latitude'),
+          lng = model.get('longitude'),
+          coord, marker, infoWindow;
+
+      if (!lat || !lng) { return; }
       coord = new google.maps.LatLng(lat, lng);
+
       this.mapBounds.extend(coord);
       this.map.fitBounds(this.mapBounds);
 
       marker = new google.maps.Marker({
         position: coord,
-        map: this.map,
-        title: "IP: " + model.id
+        map: this.map
       });
+
+      infoWindow = new google.maps.InfoWindow({
+        content: this.template({model: model})
+      });
+
+      this.data[model.id] = {
+        model: model,
+        marker: marker,
+        infoWindow: infoWindow
+      };
+
+      marker.addListener('click', _.bind(function(){
+        this.showDetail(model);
+      }, this));
+    },
+
+    showDetail: function(model) {
+      _(this.data).each(function(item, id){
+        if (id == model.id) {
+          item.infoWindow.open(this.map, item.marker);
+        } else {
+          item.infoWindow.close();
+        }
+      }, this);
     }
-  };
+  });
+
 
   // Initialize
   var addressCollection = new IPGeolocationCollecton();
-
-  var addressList = new AddressList({
-    el: document.getElementById('address-list'),
-    collection: addressCollection
-  });
 
   var newAddress = new NewAddressForm({
     el: document.getElementById('new-address'),
     collection: addressCollection
   });
 
-  var ipMap = new IPMap('map-canvas');
-  addressCollection.on("add", ipMap.addIP, ipMap);
+  var ipMap = new IPMap(document.getElementById('map-canvas'));
+  var list = document.getElementById('address-list');
+
+  addressCollection.on("add", function(model){
+    var listItem;
+
+    ipMap.addMarker(model);
+
+    listItem = new AddressListItem({
+      tagName: 'li',
+      model: model
+    });
+    list.appendChild(listItem.render().el);
+  });
+
+  Backbone.on("ip:detail", function(model){
+    ipMap.showDetail(model);
+  });
 }());
