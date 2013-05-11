@@ -1,49 +1,58 @@
-require 'bundler/setup'
-Bundler.require(:default, :test)
+require 'spec_helper'
 
-require_relative '../lib/web_api'
-
-describe WebAPI do
-  include Rack::Test::Methods
+resource 'IP Geolocation' do
+  header "Accept", "application/json"
 
   def app
     WebAPI.new
   end
 
-  it "looks up an ip address" do
-    get "/api/lookup/174.36.207.186"
+  get '/api/lookup/:query' do
+    example "The geolocation result for an ip address" do
+      do_request query: "8.8.8.8"
 
-    last_response.status.should == 200
-    JSON.parse(last_response.body.to_s).should == {
-        "geolocation" => [{"request"=>"174.36.207.186", "ip"=>"174.36.207.186", "country_code2"=>"US", "country_code3"=>"USA", "country_name"=>"United States", "continent_code"=>"NA", "region_name"=>"DC", "city_name"=>"Washington", "postal_code"=>"", "latitude"=>38.89510000000001, "longitude"=>-77.0364, "dma_code"=>511, "area_code"=>202, "timezone"=>"America/New_York"}],
-        "meta" => {"total" => 1}
-    }
-  end
+      status.should == 200
 
-  it "looks up multiple ip addresses" do
-    get "/api/lookup/174.36.207.186+74.125.137.138"
+      parsed_response = JSON.parse(response_body)
+      geolocation = parsed_response.fetch("geolocation")
+      geolocation.length.should == 1
 
-    last_response.status.should == 200
-    JSON.parse(last_response.body.to_s).should == {
-        "geolocation" => [
-            {"request"=>"174.36.207.186", "ip"=>"174.36.207.186", "country_code2"=>"US", "country_code3"=>"USA", "country_name"=>"United States", "continent_code"=>"NA", "region_name"=>"DC", "city_name"=>"Washington", "postal_code"=>"", "latitude"=>38.89510000000001, "longitude"=>-77.0364, "dma_code"=>511, "area_code"=>202, "timezone"=>"America/New_York"},
-            {"request"=>"74.125.137.138", "ip"=>"74.125.137.138", "country_code2"=>"US", "country_code3"=>"USA", "country_name"=>"United States", "continent_code"=>"NA", "region_name"=>"CA", "city_name"=>"Mountain View", "postal_code"=>"94043", "latitude"=>37.41919999999999, "longitude"=>-122.0574, "dma_code"=>807, "area_code"=>650, "timezone"=>"America/Los_Angeles"},
-        ],
-        "meta" => {"total" => 2}
-    }
-  end
+      meta = parsed_response.fetch("meta")
+      meta.fetch("total").should == 1
+    end
 
-  it "404 when there is no data" do
-    get "/api/lookup/0.0.0.0"
+    example "The geolocation results for an multiple ip addresses" do
+      explanation "You can get the results for multiple addresses with a comma separated list."
 
-    last_response.status.should == 404
-    JSON.parse(last_response.body.to_s).should == {"error" => "No known IP"}
-  end
+      do_request query: "8.8.8.8,68.85.173.249"
 
-  it 'rejects invalid formatted ip addresses' do
-    get "/api/lookup/this-is-not-an-ip"
+      status.should == 200
 
-    last_response.status.should == 400
-    JSON.parse(last_response.body.to_s).should == {"error" => "Invalid formatted IP"}
+      parsed_response = JSON.parse(response_body)
+      geolocation = parsed_response.fetch("geolocation")
+      geolocation.length.should == 2
+
+      meta = parsed_response.fetch("meta")
+      meta.fetch("total").should == 2
+    end
+
+    example "The result for an ip that there is no data on" do
+      do_request query: "0.0.0.0"
+
+      status.should == 404
+
+      parsed_response = JSON.parse(response_body)
+      parsed_response.fetch("error").should == "No data for IP"
+    end
+
+
+    example "The result from requesting an invalid ip" do
+      do_request query: "this-is-not-an-ip"
+
+      status.should == 400
+
+      parsed_response = JSON.parse(response_body)
+      parsed_response.fetch("error").should == "Invalid formatted IP"
+    end
   end
 end

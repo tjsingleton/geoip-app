@@ -12,4 +12,5 @@ end
 group :test do
   gem 'rspec'
   gem 'rack-test'
+  gem 'rspec_api_documentation', git: 'git@github.com:zipmark/rspec_api_documentation.git'
 end

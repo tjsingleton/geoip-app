@@ -3,13 +3,13 @@ require 'resolv'
 
 class WebAPI
   DEFAULT_DB_PATH = File.expand_path(File.join(File.dirname(__FILE__), '..', 'data', 'GeoLiteCity.dat'))
-  FOUR_OH_FOUR    = [404, {"Content-Type" => "application/json"}, [JSON.generate({error: "No known IP"})]]
+  FOUR_OH_FOUR    = [404, {"Content-Type" => "application/json"}, [JSON.generate({error: "No data for IP"})]]
   INVALID         = [400, {"Content-Type" => "application/json"}, [JSON.generate({error: "Invalid formatted IP"})]]
   COPYRIGHT_NOTICE = "This product includes GeoLite data created by MaxMind, available from http://www.maxmind.com"
 
   def call(env)
     geoip     = GeoIP::DB.instance
-    addresses = File.basename(env["PATH_INFO"]).split("+")
+    addresses = File.basename(env["PATH_INFO"]).split(",")
 
     responses = addresses.map do |ip|
       break(:invalid) unless Resolv::IPv4::Regex.match(ip)

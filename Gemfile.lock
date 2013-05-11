@@ -1,6 +1,23 @@
+GIT
+  remote: git@github.com:zipmark/rspec_api_documentation.git
+  revision: 4f206024b06b22ad2a61835697e6de55c4412e1c
+  specs:
+    rspec_api_documentation (0.9.2)
+      activesupport (>= 3.0.0)
+      i18n (>= 0.1.0)
+      json (>= 1.4.6)
+      mustache (>= 0.99.4)
+      rspec (>= 2.6.0)
+      webmock (>= 1.7.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
+    activesupport (3.2.12)
+      i18n (~> 0.6)
+      multi_json (~> 1.0)
+    addressable (2.3.4)
+    crack (0.3.2)
     diff-lcs (1.2.3)
     foreman (0.62.0)
       thor (>= 0.13.6)
@@ -10,6 +27,11 @@ GEM
     geoip (1.2.1)
     geoip-db (2013.05)
       geoip
+    i18n (0.6.4)
+    json (1.7.7)
+    json (1.7.7-java)
+    multi_json (1.7.3)
+    mustache (0.99.4)
     posix-spawn (0.3.6)
     puma (1.6.3)
       rack (~> 1.2)
@@ -27,6 +49,9 @@ GEM
       diff-lcs (>= 1.1.3, < 2.0)
     rspec-mocks (2.13.1)
     thor (0.18.1)
+    webmock (1.11.0)
+      addressable (>= 2.2.7)
+      crack (>= 0.3.2)
 
 PLATFORMS
   java
@@ -39,3 +64,4 @@ DEPENDENCIES
   rack
   rack-test
   rspec
+  rspec_api_documentation!

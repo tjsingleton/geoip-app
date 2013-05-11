@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>IP Geolocation API</title>
+    <meta charset="utf-8">
+    <style>
+      td.required .name:after {
+        float: right;
+        content: "required";
+        font-weight: normal;
+        color: #F08080;
+      }
+
+      p {
+        padding: 15px;
+        font-size: 130%;
+      }
+
+      pre {
+        white-space: pre-wrap;
+      }
+
+      body {
+        margin-left: auto;
+        margin-right: auto;
+        width: 900px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>IP Geolocation API</h1>
+
+      <div class="article">
+        <h2>The geolocation results for an multiple ip addresses</h2>
+        <h3>GET /api/lookup/:query</h3>
+          <p class="explanation">
+            You can get the results for multiple addresses with a comma separated list.
+          </p>
+
+
+          <h3>Request</h3>
+
+          <h4>Headers</h4>
+          <pre class="request headers">Accept: application/json
+Host: example.org
+Cookie: </pre>
+
+          <h4>Route</h4>
+          <pre class="request route highlight">GET /api/lookup/8.8.8.8,68.85.173.249</pre>
+
+
+
+            <h4>cURL</h4>
+            <pre class="request">curl &quot;http://geoip-app.herokuapp.com/api/lookup/8.8.8.8,68.85.173.249&quot; -X GET \
+	-H &quot;Accept: application/json&quot; \
+	-H &quot;Host: example.org&quot; \
+	-H &quot;Cookie: &quot;</pre>
+
+            <h3>Response</h3>
+            <h4>Headers</h4>
+            <pre class="response headers">Content-Type: application/json
+X-Attribution: This product includes GeoLite data created by MaxMind, available from http://www.maxmind.com
+Content-Length: 624</pre>
+            <h4>Status</h4>
+            <pre class="response status">200 OK</pre>
+              <h4>Body</h4>
+              <pre class="response body">{"geolocation":[{"request":"8.8.8.8","ip":"8.8.8.8","country_code2":"US","country_code3":"USA","country_name":"United States","continent_code":"NA","region_name":"CA","city_name":"Mountain View","postal_code":"94043","latitude":37.41919999999999,"longitude":-122.0574,"dma_code":807,"area_code":650,"timezone":"America/Los_Angeles"},{"request":"68.85.173.249","ip":"68.85.173.249","country_code2":"US","country_code3":"USA","country_name":"United States","continent_code":"NA","region_name":"","city_name":"","postal_code":"","latitude":38.0,"longitude":-97.0,"dma_code":0,"area_code":0,"timezone":null}],"meta":{"total":2}}</pre>
+      </div>
+    </div>
+  </body>
+</html>

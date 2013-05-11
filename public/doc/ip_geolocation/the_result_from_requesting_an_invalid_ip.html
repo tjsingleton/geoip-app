@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>IP Geolocation API</title>
+    <meta charset="utf-8">
+    <style>
+      td.required .name:after {
+        float: right;
+        content: "required";
+        font-weight: normal;
+        color: #F08080;
+      }
+
+      p {
+        padding: 15px;
+        font-size: 130%;
+      }
+
+      pre {
+        white-space: pre-wrap;
+      }
+
+      body {
+        margin-left: auto;
+        margin-right: auto;
+        width: 900px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>IP Geolocation API</h1>
+
+      <div class="article">
+        <h2>The result from requesting an invalid ip</h2>
+        <h3>GET /api/lookup/:query</h3>
+
+
+          <h3>Request</h3>
+
+          <h4>Headers</h4>
+          <pre class="request headers">Accept: application/json
+Host: example.org
+Cookie: </pre>
+
+          <h4>Route</h4>
+          <pre class="request route highlight">GET /api/lookup/this-is-not-an-ip</pre>
+
+
+
+            <h4>cURL</h4>
+            <pre class="request">curl &quot;http://geoip-app.herokuapp.com/api/lookup/this-is-not-an-ip&quot; -X GET \
+	-H &quot;Accept: application/json&quot; \
+	-H &quot;Host: example.org&quot; \
+	-H &quot;Cookie: &quot;</pre>
+
+            <h3>Response</h3>
+            <h4>Headers</h4>
+            <pre class="response headers">Content-Type: application/json
+Content-Length: 32</pre>
+            <h4>Status</h4>
+            <pre class="response status">400 Bad Request</pre>
+              <h4>Body</h4>
+              <pre class="response body">{"error":"Invalid formatted IP"}</pre>
+      </div>
+    </div>
+  </body>
+</html>
