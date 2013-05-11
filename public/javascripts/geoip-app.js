@@ -24,25 +24,38 @@
   });
 
   var NewAddressForm = Backbone.View.extend({
+    SAMPLE_IPS: ['98.251.52.1', '68.85.173.249', '68.85.109.77'],
     inputId: "ip-address",
 
     events: {
-      'click button': 'addIP',
+      'click .add': 'addIP',
+      'click .sample': 'addSamples',
       'submit': function(){ return false; }
     },
 
     initialize: function() {
-      _.bindAll(this, 'addIP');
+      _.bindAll(this, 'addIP', 'addSamples');
 
       this.input = document.getElementById(this.inputId);
     },
 
     addIP: function() {
-      var ip = this.input.value,
-          model = new IPGeolocation({id: ip}),
-          collection = this.options.collection;
-
+      var ip = this.input.value;
       this.input.value = "";
+      this._addIP(ip);
+    },
+
+    addSamples: function(){
+      var i = 0, ip;
+
+      for (; ip = this.SAMPLE_IPS[i]; i++) {
+        this._addIP(ip);
+      }
+    },
+
+    _addIP: function(ip) {
+      var model = new IPGeolocation({id: ip}),
+          collection = this.options.collection;
 
       model.fetch({
         success: function(){
