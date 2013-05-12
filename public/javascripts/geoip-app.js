@@ -102,10 +102,12 @@
   _.extend(IPMap.prototype, {
     template: _.template('<div class="info">' +
                          '<h3><%= model.id %></h3>' +
+                         '<dl>' +
                          '<% _.each(model.attributes, function(value, key){ %>' +
                          '<% if (value === model.id || !value) { return; } %>' +
-                         '<div><strong><%= key %>:</strong> <%= value %>' +
-                         '<% }); %>'+
+                         '<dt><%= key %></dt><dd><%= value %></dd>' +
+                         '<% }); %>' +
+                         '</dl>'+
                          '</div>'),
 
     addMarker: function(model){
