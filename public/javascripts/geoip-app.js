@@ -20,7 +20,7 @@
   });
 
   var AddressListItem =  Backbone.View.extend({
-    template: _.template('<%= model.id %> (<%= model.locationStr() %>)'),
+    template: _.template('<td><%= model.id %></td><td><%= model.locationStr() %></td>'),
     events: {
       'click': 'showDetail'
     },
@@ -37,7 +37,7 @@
   });
 
   var NewAddressForm = Backbone.View.extend({
-    SAMPLE_IPS: ['98.251.52.1', '68.85.173.249', '68.85.109.77'],
+    SAMPLE_IPS: ['98.251.53.1', '68.85.173.249', '68.85.109.77'],
     inputId: "ip-address",
 
     events: {
@@ -162,7 +162,7 @@
   });
 
   var ipMap = new IPMap(document.getElementById('map-canvas'));
-  var list = document.getElementById('address-list');
+  var table = document.getElementById('address-table');
 
   addressCollection.on("add", function(model){
     var listItem;
@@ -170,10 +170,10 @@
     ipMap.addMarker(model);
 
     listItem = new AddressListItem({
-      tagName: 'li',
+      tagName: 'tr',
       model: model
     });
-    list.appendChild(listItem.render().el);
+    table.appendChild(listItem.render().el);
   });
 
   Backbone.on("ip:detail", function(model){

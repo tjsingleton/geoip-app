@@ -1,39 +1,50 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>IP Geolocation</title>
+    <link rel="stylesheet" href="stylesheets/bootstrap-responsive.min.css" type="text/css" />
+    <link rel="stylesheet" href="stylesheets/journal.min.css" type="text/css" />
     <link rel="stylesheet" href="stylesheets/geoip-app.css" type="text/css" />
-</head>
-<body>
-<div id="map-canvas"></div>
+  </head>
+  
+  <body>
+    <header id="map-canvas"></header>
+    <div class="container">  
+      <h1>Addresses</h1>
+      <table class="table table-bordered table-striped table-hover">
+        <thead>
+          <tr>
+            <th>IP</th>
+            <th>Location</th>
+          </tr>
+        </thead>
+        <tbody id="address-table">
+        </tbody>
+      </table>
 
-<h2>Addresses</h2>
-<ul id="address-list"></ul>
+      <form id="new-address" class="well">
+        <label for="ip-address">IP Address</label><input id="ip-address" class="input-medium" type="text"/>
+        <button class="btn">Add</button>
+        <button class="sample btn">Load Sample IPs</button>
+      </form>
 
-<form id="new-address">
-    <div>
-        <label for="ip-address">IP Address</label><input id="ip-address" type="text"/>
-        <button>Add</button>
-        <button class="sample">Load Sample IPs</button>
-    </div>
-</form>
+      <footer>
+        <p>
+          <a href="https://github.com/tjsingleton/geoip-app">View Source on GitHub</a> |
+          <a href="/doc/">Geolocation API Documentation</a>
+        </p>
+        <p>
+          <small>
+            This product includes GeoLite data created by MaxMind, available from
+            <a href="http://www.maxmind.com">http://www.maxmind.com</a>.
+          </small>
+        </footer>
+      </div>
 
-<hr/>
-<p>
-    <a href="https://github.com/tjsingleton/geoip-app">View Source on GitHub</a> |
-    <a href="/doc/">Geolocation API Documentation</a>
-</p>
-<p>
-    <small>
-        This product includes GeoLite data created by MaxMind, available from
-        <a href="http://www.maxmind.com">http://www.maxmind.com</a>.
-    </small>
-</p>
-
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
-<script src="javascripts/geoip-app.js"></script>
-</body>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
+      <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+      <script src="javascripts/geoip-app.js"></script>
+    </body>
 </html>

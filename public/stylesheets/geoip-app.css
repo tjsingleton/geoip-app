@@ -3,20 +3,14 @@
   height: 400px;
 }
 
-#new-address button.sample {
-  border: none;
-  background: transparent;
-  text-decoration: underline;
-  color: #7a7a7a;
+div.info h3 {
+  font-size: 18px;
+  margin: 0 0 10px;
 }
 
-#address-list li:hover {
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-div.info {
-  font-size: 85%;
+div.info dl {
+  margin: 0;
+  color: #000;
 }
 
 div.info dt {
@@ -35,6 +29,20 @@ div.info dd {
   margin: 0;
 }
 
-div.info h3 {
-  margin: 0 0 0.25em;
+#new-address button.sample {
+  border: none;
+  background: transparent;
+  text-decoration: underline;
+  color: #7a7a7a;
+  border-radius: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+#address-table tr:hover {
+  cursor: pointer;
+}
+
+button.btn {
+  margin-top: -10px;
 }
