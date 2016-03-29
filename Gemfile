@@ -1,5 +1,5 @@
-source "https://rubygems.org"
-ruby '2.0.0'
+ruby '2.3.0'
+source 'https://rubygems.org'
 
 gem 'rack'
 gem 'geoip-db'
@@ -12,5 +12,5 @@ end
 group :test do
   gem 'rspec'
   gem 'rack-test'
-  gem 'rspec_api_documentation', git: 'git@github.com:zipmark/rspec_api_documentation.git'
+  gem 'rspec_api_documentation'
 end
